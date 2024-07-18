@@ -1,0 +1,10 @@
+- id: gen-readme
+  name: gen-readme
+  entry: gen-readme
+  language: python
+  require_serial: true
+  args:
+    - "--org-name"
+    - "--repo-name"
+    - "--branch"
+    - "--gen-html"
