@@ -350,7 +350,7 @@ def gen_readme(files, version, org_name, repo_name, branch, addons_dir):
             )
 
             # Verifica que en el readme haya datos validos
-            check_readme_contents(addon_dir)
+            check_readme_fragments(addon_dir)
 
             # Generamos el html
             gen_one_addon_index(readme_filename)
