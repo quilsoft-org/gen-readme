@@ -103,8 +103,9 @@ RST2HTML_SETTINGS = {
     # Use the short form of syntax highlighting so that the generated
     # Pygments CSS can be used to style the output.
     "syntax_highlight": "short",
+    "output_enconding": "utf-8",
+    "xml_declaration": False,
 }
-
 
 def gen_one_addon_index(readme_filename):
     """Genera el readme en html"""
@@ -131,10 +132,17 @@ def gen_one_addon_index(readme_filename):
     index = re.sub(
         rb"(<meta.*generator.*Docutils)\s*[\d.]+", rb"\1", index, re.MULTILINE
     )
+    # remove the http-equiv line
+    index = re.sub(
+        rb'<meta\s+http-equiv="Content-Type"\s+content="text/html;\s*charset=utf-8"\s*/?>',
+        b'',
+        index,
+        flags=re.MULTILINE | re.IGNORECASE
+    )
+
     with open(index_filename, "wb") as f:
         f.write(index)
     return index_filename
-
 
 def check_rst(readme_filename):
     with tempfile.NamedTemporaryFile() as f:
@@ -144,7 +152,6 @@ def check_rst(readme_filename):
             writer_name="html4css1",
             settings_overrides=RST2HTML_SETTINGS,
         )
-
 
 def generate_fragment(org_name, repo_name, branch, addon_name, file):
     fragment_lines = file.readlines()
@@ -180,6 +187,30 @@ def generate_fragment(org_name, repo_name, branch, addon_name, file):
         fragment += "\n"
     return fragment
 
+def check_readme_fragments(addon_dir):
+    """ Verifica si el contenido del readme es válido"""
+
+    files_to_check = ['CONTRIBUTORS.rst', 'DESCRIPTION.rst']
+    errors = []
+
+    for file_name in files_to_check:
+        addon_dir = os.path.join(addon_dir, file_name)
+
+        try:
+            with open(addon_dir, 'r', encoding='utf-8') as file:
+                content = file.read().strip()
+                if len(content) <= 10:
+                    errors.append(f'The section {file_name} should have more content.')
+
+        except FileNotFoundError:
+            errors.append(f'File {file_name} does not exist')
+        except Exception as e:
+            errors.append(f'Unknown exception str({e}) reading {file_name}')
+
+    for error in errors:
+        print(error)
+
+    return True if not error else False
 
 def gen_one_addon_readme(org_name, repo_name, branch, addon_name, addon_dir, manifest):
     """Genera el README.rst para el addon addon_name"""
@@ -274,6 +305,7 @@ def gen_one_addon_readme(org_name, repo_name, branch, addon_name, addon_dir, man
     help="Directory containing several addons, the README will be "
     "generated for all installable addons found there...",
 )
+
 def gen_readme(files, version, org_name, repo_name, branch, addons_dir):
     """main function"""
 
@@ -317,6 +349,9 @@ def gen_readme(files, version, org_name, repo_name, branch, addons_dir):
                 org_name, repo_name, branch, addon_name, addon_dir, manifest
             )
 
+            # Verifica que en el readme haya datos validos
+            check_readme_contents(addon_dir)
+
             # Generamos el html
             gen_one_addon_index(readme_filename)
 
@@ -330,14 +365,14 @@ def gen_readme(files, version, org_name, repo_name, branch, addons_dir):
         if not os.path.exists(os.path.join(addon_dir, FRAGMENTS_DIR)):
             os.mkdir(os.path.join(addon_dir, FRAGMENTS_DIR))
 
-        # Generar README.rst
+        # Generar fragmentos si no existen y README.rst
         readme_filename = gen_one_addon_readme(
             org_name, repo_name, branch, addon_name, addon_dir, manifest
         )
 
-        # parece que chequea que el rst sea correcto escribiendo en un temporarario
-        #        check_rst(readme_filename)
-        #        readme_filenames.append(readme_filename)
+        # Verifica que en el readme haya datos validos
+        if not check_readme_fragments(addon_dir):
+            exit(1)
 
         # if not manifest.get("preloadable", True):
         #     continue

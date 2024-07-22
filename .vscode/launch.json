@@ -7,7 +7,7 @@
         {
             "name": "Debug gen-readme proyect",
             "args": [
-                "--addons-dir=/odoo/ar/odoo-16.0e/testpy16/sources/l10n-paraguay",
+                "--addons-dir=/odoo/ar/odoo-16.0e/testpy16/sources/addons-l10n-paraguay",
                 "--org-name=tecnopro-assistance",
                 "--repo-name=l10n-paraguay",
                 "--branch=16.0",
