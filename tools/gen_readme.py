@@ -193,7 +193,8 @@ def generate_fragment(org_name, repo_name, branch, addon_name, file):
 
 def check_readme_fragments(addon_dir):
     """Verifica si el contenido del readme es válido"""
-
+    print('check ',addon_dir)
+    
     parts_to_check = [
         {"section": "CONTRIBUTORS.rst", "msg": "You must add your name and mail in the section %s/readme/%s i.e. * Jorge Obiols <jorge.obiols@gmail.com>"},
         {"section": "DESCRIPTION.rst", "msg": "The section %s/readme%s should have more content"},
@@ -330,13 +331,14 @@ def gen_readme(files, version, org_name, repo_name, branch, addons_dir):
     #         for file in fi:
     #             files.append(file)
     # ##################################################
-
+    print(files)
     if files:
         # Si hay files es porque se llamo desde pre-commit
 
         modules = []
         # Armar lista con los modulos
         for file in files:
+            print('--------->',file)
             # Quitar los archivos que no son directorios
             if file.startswith(".") or len(file.split("/")) == 1:
                 continue
