@@ -191,13 +191,20 @@ def generate_fragment(org_name, repo_name, branch, addon_name, file):
         fragment += "\n"
     return fragment
 
+
 def check_readme_fragments(addon_dir):
     """Verifica si el contenido del readme es válido"""
-    print('check ',addon_dir)
-    
+    print("check ", addon_dir)
+
     parts_to_check = [
-        {"section": "CONTRIBUTORS.rst", "msg": "You must add your name and mail in the section %s/readme/%s i.e. * Jorge Obiols <jorge.obiols@gmail.com>"},
-        {"section": "DESCRIPTION.rst", "msg": "The section %s/readme%s should have more content"},
+        {
+            "section": "CONTRIBUTORS.rst",
+            "msg": "You must add your name and mail in the section %s/readme/%s i.e. * Jorge Obiols <jorge.obiols@gmail.com>",
+        },
+        {
+            "section": "DESCRIPTION.rst",
+            "msg": "The section %s/readme%s should have more content",
+        },
     ]
     errors = []
     module_name = os.path.basename(addon_dir)
@@ -206,17 +213,17 @@ def check_readme_fragments(addon_dir):
         dir = os.path.join(addon_dir + "/readme", item["section"])
 
         try:
-            with open(dir, "r", encoding="utf-8") as file:
+            with open(dir, encoding="utf-8") as file:
                 content = file.read().strip()
                 if len(content) <= 10:
-                    errors.append(
-                        item['msg'] % (module_name, item['section'])
-                    )
+                    errors.append(item["msg"] % (module_name, item["section"]))
 
         except FileNotFoundError:
             errors.append(f"File {module_name}/readme/{item['section']} does not exist")
         except Exception as e:
-            errors.append(f"Unknown exception str({e}) reading {module_name}/readme/{item['section']}")
+            errors.append(
+                f"Unknown exception str({e}) reading {module_name}/readme/{item['section']}"
+            )
 
     for error in errors:
         print(error)
@@ -338,7 +345,7 @@ def gen_readme(files, version, org_name, repo_name, branch, addons_dir):
         modules = []
         # Armar lista con los modulos
         for file in files:
-            print('--------->',file)
+            print("--------->", file)
             # Quitar los archivos que no son directorios
             if file.startswith(".") or len(file.split("/")) == 1:
                 continue
