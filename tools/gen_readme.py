@@ -1,3 +1,4 @@
+import os
 import click
 import os
 import re
@@ -107,6 +108,7 @@ RST2HTML_SETTINGS = {
     "xml_declaration": False,
 }
 
+
 def gen_one_addon_index(readme_filename):
     """Genera el readme en html"""
     addon_dir = os.path.dirname(readme_filename)
@@ -135,14 +137,15 @@ def gen_one_addon_index(readme_filename):
     # remove the http-equiv line
     index = re.sub(
         rb'<meta\s+http-equiv="Content-Type"\s+content="text/html;\s*charset=utf-8"\s*/?>',
-        b'',
+        b"",
         index,
-        flags=re.MULTILINE | re.IGNORECASE
+        flags=re.MULTILINE | re.IGNORECASE,
     )
 
     with open(index_filename, "wb") as f:
         f.write(index)
     return index_filename
+
 
 def check_rst(readme_filename):
     with tempfile.NamedTemporaryFile() as f:
@@ -152,6 +155,7 @@ def check_rst(readme_filename):
             writer_name="html4css1",
             settings_overrides=RST2HTML_SETTINGS,
         )
+
 
 def generate_fragment(org_name, repo_name, branch, addon_name, file):
     fragment_lines = file.readlines()
@@ -188,29 +192,36 @@ def generate_fragment(org_name, repo_name, branch, addon_name, file):
     return fragment
 
 def check_readme_fragments(addon_dir):
-    """ Verifica si el contenido del readme es válido"""
+    """Verifica si el contenido del readme es válido"""
 
-    files_to_check = ['CONTRIBUTORS.rst', 'DESCRIPTION.rst']
+    parts_to_check = [
+        {"section": "CONTRIBUTORS.rst", "msg": "You must add your name and mail in the section %s/readme/%s i.e. * Jorge Obiols <jorge.obiols@gmail.com>"},
+        {"section": "DESCRIPTION.rst", "msg": "The section %s/readme%s should have more content"},
+    ]
     errors = []
+    module_name = os.path.basename(addon_dir)
 
-    for file_name in files_to_check:
-        addon_dir = os.path.join(addon_dir, file_name)
+    for item in parts_to_check:
+        dir = os.path.join(addon_dir + "/readme", item["section"])
 
         try:
-            with open(addon_dir, 'r', encoding='utf-8') as file:
+            with open(dir, "r", encoding="utf-8") as file:
                 content = file.read().strip()
                 if len(content) <= 10:
-                    errors.append(f'The section {file_name} should have more content.')
+                    errors.append(
+                        item['msg'] % (module_name, item['section'])
+                    )
 
         except FileNotFoundError:
-            errors.append(f'File {file_name} does not exist')
+            errors.append(f"File {module_name}/readme/{item['section']} does not exist")
         except Exception as e:
-            errors.append(f'Unknown exception str({e}) reading {file_name}')
+            errors.append(f"Unknown exception str({e}) reading {module_name}/readme/{item['section']}")
 
     for error in errors:
         print(error)
 
-    return True if not error else False
+    return True if not errors else False
+
 
 def gen_one_addon_readme(org_name, repo_name, branch, addon_name, addon_dir, manifest):
     """Genera el README.rst para el addon addon_name"""
@@ -305,7 +316,6 @@ def gen_one_addon_readme(org_name, repo_name, branch, addon_name, addon_dir, man
     help="Directory containing several addons, the README will be "
     "generated for all installable addons found there...",
 )
-
 def gen_readme(files, version, org_name, repo_name, branch, addons_dir):
     """main function"""
 
@@ -360,6 +370,7 @@ def gen_readme(files, version, org_name, repo_name, branch, addons_dir):
         # obtiene lista de diccionarios con los datos relevantes de cada modulo.
         addons.extend(find_addons(addons_dir))
     #    readme_filenames = []
+
     for addon_name, addon_dir, manifest in addons:
         # si no existe el readme (directorio) lo creamos
         if not os.path.exists(os.path.join(addon_dir, FRAGMENTS_DIR)):
@@ -377,7 +388,3 @@ def gen_readme(files, version, org_name, repo_name, branch, addons_dir):
         # if not manifest.get("preloadable", True):
         #     continue
         gen_one_addon_index(readme_filename)
-
-
-#        if index_filename:
-#            readme_filenames.append(index_filename)
