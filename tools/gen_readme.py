@@ -295,45 +295,45 @@ def gen_one_addon_readme(org_name, repo_name, branch, addon_name, addon_dir, man
     return readme_filename
 
 
-@click.command()
-@click.argument(
-    "files",
-    type=click.Path(exists=False),
-    nargs=-1,
-)
-@click.option(
-    "--version",
-    is_flag=True,
-    help="Show version and exit",
-)
-@click.option(
-    "--org-name",
-    help="Organization name",
-)
-@click.option(
-    "--repo-name",
-    help="Repository name, eg. server-tools.",
-)
-@click.option(
-    "--branch",
-    help="Odoo series. eg 11.0.",
-)
-@click.option(
-    "--addons-dir",
-    type=click.Path(dir_okay=True, file_okay=False, exists=False),
-    help="Directory containing several addons, the README will be "
-    "generated for all installable addons found there...",
-)
-def gen_readme(files, version, org_name, repo_name, branch, addons_dir):
+# @click.command()
+# @click.argument(
+#     "files",
+#     type=click.Path(exists=False),
+#     nargs=-1,
+# )
+# @click.option(
+#     "--version",
+#     is_flag=True,
+#     help="Show version and exit",
+# )
+# @click.option(
+#     "--org-name",
+#     help="Organization name",
+# )
+# @click.option(
+#     "--repo-name",
+#     help="Repository name, eg. server-tools.",
+# )
+# @click.option(
+#     "--branch",
+#     help="Odoo series. eg 11.0.",
+# )
+# @click.option(
+#     "--addons-dir",
+#     type=click.Path(dir_okay=True, file_okay=False, exists=False),
+#     help="Directory containing several addons, the README will be "
+#     "generated for all installable addons found there...",
+# )
+def gen_readme():
     """main function esta es la entrada"""
 
     import sys
+
     args = sys.argv[1:]
     print(args)
-    print('-------------------------')
-    print(files, version, org_name, repo_name, branch, addons_dir)
-    sys.exit(1)
+    print("-------------------------")
 
+    sys.exit(1)
 
     if version:
         print(f"Gen readme version {__version__}")
