@@ -325,7 +325,15 @@ def gen_one_addon_readme(org_name, repo_name, branch, addon_name, addon_dir, man
     "generated for all installable addons found there...",
 )
 def gen_readme(files, version, org_name, repo_name, branch, addons_dir):
-    """main function"""
+    """main function esta es la entrada"""
+
+    import sys
+    args = sys.argv[1:]
+    print(args)
+    print('-------------------------')
+    print(files, version, org_name, repo_name, branch, addons_dir)
+    sys.exit()
+
 
     if version:
         print(f"Gen readme version {__version__}")
