@@ -332,7 +332,7 @@ def gen_readme(files, version, org_name, repo_name, branch, addons_dir):
     print(args)
     print('-------------------------')
     print(files, version, org_name, repo_name, branch, addons_dir)
-    sys.exit()
+    sys.exit(1)
 
 
     if version:
