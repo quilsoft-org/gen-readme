@@ -194,8 +194,6 @@ def generate_fragment(org_name, repo_name, branch, addon_name, file):
 
 def check_readme_fragments(addon_dir):
     """Verifica si el contenido del readme es válido"""
-    print("check ", addon_dir)
-
     parts_to_check = [
         {
             "section": "CONTRIBUTORS.rst",
@@ -327,8 +325,6 @@ def gen_one_addon_readme(org_name, repo_name, branch, addon_name, addon_dir, man
 def gen_readme(files,org_name, repo_name, branch,addons_dir):
     """main function esta es la entrada"""
 
-    print(org_name, repo_name, branch,addons_dir, '-----------')
-
     import sys
     # pre-commit le pasa todos los files que hay en el repositorio como parametros
     files = sys.argv[1:]
@@ -343,7 +339,6 @@ def gen_readme(files,org_name, repo_name, branch,addons_dir):
                 continue
             module = file.split("/")[0]
             if not module in modules:
-                print("module--------->", module)
                 modules.append(module)
 
         # obtiene lista de diccionarios con los datos relevantes de cada modulo.
