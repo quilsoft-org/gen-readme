@@ -328,37 +328,20 @@ def gen_readme():
     """main function esta es la entrada"""
 
     import sys
-
-    args = sys.argv[1:]
-    print(args)
-    print("-------------------------")
-
-    sys.exit(1)
-
-    if version:
-        print(f"Gen readme version {__version__}")
-        exit(0)
-
-    # ##################################################
-    # files = []
-    # if not files:
-    #     with open("doc/files.txt", "r") as fi:
-    #         for file in fi:
-    #             files.append(file)
-    # ##################################################
-    print(files)
+    # pre-commit le pasa todos los files que hay en el repositorio como parametros
+    files = sys.argv[1:]
     if files:
         # Si hay files es porque se llamo desde pre-commit
 
         modules = []
         # Armar lista con los modulos
         for file in files:
-            print("--------->", file)
             # Quitar los archivos que no son directorios
             if file.startswith(".") or len(file.split("/")) == 1:
                 continue
             module = file.split("/")[0]
             if not module in modules:
+                print("module--------->", module)
                 modules.append(module)
 
         # obtiene lista de diccionarios con los datos relevantes de cada modulo.
