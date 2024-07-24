@@ -197,11 +197,11 @@ def check_readme_fragments(addon_dir):
     parts_to_check = [
         {
             "section": "CONTRIBUTORS.rst",
-            "msg": "You must add your name and mail in the section %s/readme/%s i.e. * Jorge Obiols <jorge.obiols@gmail.com>",
+            "msg": 'The section %s/readme/%s has no identification please add one i.e. "* Jorge Obiols <jorge.obiols@gmail.com>".',
         },
         {
             "section": "DESCRIPTION.rst",
-            "msg": "The section %s/readme/%s should have more content",
+            "msg": "The section %s/readme/%s has very little content.",
         },
     ]
     errors = []
