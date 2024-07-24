@@ -327,7 +327,7 @@ def gen_one_addon_readme(org_name, repo_name, branch, addon_name, addon_dir, man
 def gen_readme(org_name, repo_name, branch,addons_dir):
     """main function esta es la entrada"""
 
-    print(org_name, repo_name, branch, '-----------')
+    print(org_name, repo_name, branch,addons_dir, '-----------')
 
     import sys
     # pre-commit le pasa todos los files que hay en el repositorio como parametros
