@@ -203,7 +203,7 @@ def check_readme_fragments(addon_dir):
         },
         {
             "section": "DESCRIPTION.rst",
-            "msg": "The section %s/readme%s should have more content",
+            "msg": "The section %s/readme/%s should have more content",
         },
     ]
     errors = []
@@ -295,7 +295,7 @@ def gen_one_addon_readme(org_name, repo_name, branch, addon_name, addon_dir, man
     return readme_filename
 
 
-# @click.command()
+@click.command()
 # @click.argument(
 #     "files",
 #     type=click.Path(exists=False),
@@ -306,26 +306,28 @@ def gen_one_addon_readme(org_name, repo_name, branch, addon_name, addon_dir, man
 #     is_flag=True,
 #     help="Show version and exit",
 # )
-# @click.option(
-#     "--org-name",
-#     help="Organization name",
-# )
-# @click.option(
-#     "--repo-name",
-#     help="Repository name, eg. server-tools.",
-# )
-# @click.option(
-#     "--branch",
-#     help="Odoo series. eg 11.0.",
-# )
-# @click.option(
-#     "--addons-dir",
-#     type=click.Path(dir_okay=True, file_okay=False, exists=False),
-#     help="Directory containing several addons, the README will be "
-#     "generated for all installable addons found there...",
-# )
-def gen_readme():
+@click.option(
+    "--org-name",
+    help="Organization name",
+)
+@click.option(
+    "--repo-name",
+    help="Repository name, eg. server-tools.",
+)
+@click.option(
+    "--branch",
+    help="Odoo series. eg 11.0.",
+)
+@click.option(
+    "--addons-dir",
+    type=click.Path(dir_okay=True, file_okay=False, exists=False),
+    help="Directory containing several addons, the README will be "
+    "generated for all installable addons found there...",
+)
+def gen_readme(org_name, repo_name, branch,addons_dir):
     """main function esta es la entrada"""
+
+    print(org_name, repo_name, branch, '-----------')
 
     import sys
     # pre-commit le pasa todos los files que hay en el repositorio como parametros
@@ -367,9 +369,9 @@ def gen_readme():
 
     addons = []
     if addons_dir:
-        # obtiene lista de diccionarios con los datos relevantes de cada modulo.
+    #     # obtiene lista de diccionarios con los datos relevantes de cada modulo.
         addons.extend(find_addons(addons_dir))
-    #    readme_filenames = []
+        readme_filenames = []
 
     for addon_name, addon_dir, manifest in addons:
         # si no existe el readme (directorio) lo creamos
