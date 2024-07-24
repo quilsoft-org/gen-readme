@@ -324,7 +324,7 @@ def gen_one_addon_readme(org_name, repo_name, branch, addon_name, addon_dir, man
     help="Directory containing several addons, the README will be "
     "generated for all installable addons found there...",
 )
-def gen_readme(org_name, repo_name, branch,addons_dir):
+def gen_readme(files,org_name, repo_name, branch,addons_dir):
     """main function esta es la entrada"""
 
     print(org_name, repo_name, branch,addons_dir, '-----------')
