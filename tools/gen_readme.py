@@ -7,7 +7,6 @@ from .manifest import find_addons
 from jinja2 import Template
 from docutils.core import publish_file
 import tempfile
-from .__init__ import __version__
 from urllib.parse import urljoin
 
 FRAGMENTS_DIR = "readme"
@@ -195,6 +194,7 @@ def generate_fragment(org_name, repo_name, branch, addon_name, file):
 
 def check_readme_fragments(addon_dir):
     """Verifica si el contenido del readme es válido"""
+    print("verificando readme")
     parts_to_check = [
         {
             "section": "CONTRIBUTORS.rst",
@@ -209,7 +209,7 @@ def check_readme_fragments(addon_dir):
     module_name = os.path.basename(addon_dir)
 
     for item in parts_to_check:
-        dir = os.path.join(addon_dir + "/readme", item["section"])
+        dir = os.path.join(addon_dir + "/readme", item.get("section"))
 
         try:
             with open(dir, encoding="utf-8") as file:
@@ -323,21 +323,22 @@ def gen_one_addon_readme(org_name, repo_name, branch, addon_name, addon_dir, man
     help="Directory containing several addons, the README will be "
     "generated for all installable addons found there...",
 )
-
-
 def get_answers(answ):
-    with open(answ,'r') as file:
+    with open(answ) as file:
         answers = yaml.safe_load(file)
 
     print(answers)
 
 
-def gen_readme(files,org_name, repo_name, branch, addons_dir):
+def gen_readme(files, org_name, repo_name, branch, addons_dir):
     """main function esta es la entrada"""
 
     import sys
+
     # pre-commit le pasa todos los files que hay en el repositorio como parametros
     files = sys.argv[1:]
+    print("parametros = ", files)
+
     if files:
         # Si hay files es porque se llamo desde pre-commit
 
@@ -345,8 +346,8 @@ def gen_readme(files,org_name, repo_name, branch, addons_dir):
         # Armar lista con los modulos
         for file in files:
             # Leer el archivo de respuetas
-            if file == '.copier-answers.yml':
-                get_answers('./'+file)
+            if file == ".copier-answers.yml":
+                get_answers("./" + file)
 
             # Quitar los archivos que no son directorios
             if file.startswith(".") or len(file.split("/")) == 1:
@@ -378,9 +379,8 @@ def gen_readme(files,org_name, repo_name, branch, addons_dir):
 
     addons = []
     if addons_dir:
-    #     # obtiene lista de diccionarios con los datos relevantes de cada modulo.
+        #     # obtiene lista de diccionarios con los datos relevantes de cada modulo.
         addons.extend(find_addons(addons_dir))
-        readme_filenames = []
 
     for addon_name, addon_dir, manifest in addons:
         # si no existe el readme (directorio) lo creamos
