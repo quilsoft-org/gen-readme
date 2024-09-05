@@ -4,13 +4,14 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-    
+
         {
             "name": "Debug gen-readme proyect",
             "args": [
-                "--addons-dir=/odoo/ar/odoo-16.0e/testpy16/sources/addons-l10n-paraguay",
-                "--org-name=tecnopro-assistance",
-                "--repo-name=l10n-paraguay",
+                "module_1","module_2",".copier_answers.yml",
+                "--addons-dir=/odoo/ar/odoo-16.0e/sources/utest",
+                "--org-name=quilsoft-org",
+                "--repo-name=utestguay",
                 "--branch=16.0",
             ],
             "type": "python",

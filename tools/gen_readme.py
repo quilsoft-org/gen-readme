@@ -322,11 +322,12 @@ def gen_one_addon_readme(org_name, repo_name, branch, addon_name, addon_dir, man
     help="Directory containing several addons, the README will be "
     "generated for all installable addons found there...",
 )
-def gen_readme(files,org_name, repo_name, branch,addons_dir):
+def gen_readme(files,org_name, repo_name, branch, addons_dir):
     """main function esta es la entrada"""
 
     import sys
     # pre-commit le pasa todos los files que hay en el repositorio como parametros
+    print('entramos ------------------')
     files = sys.argv[1:]
     if files:
         # Si hay files es porque se llamo desde pre-commit
@@ -340,6 +341,11 @@ def gen_readme(files,org_name, repo_name, branch,addons_dir):
             module = file.split("/")[0]
             if not module in modules:
                 modules.append(module)
+
+        print('-------------------')
+        print(modules)
+        exit(1)
+
 
         # obtiene lista de diccionarios con los datos relevantes de cada modulo.
         addons = []
