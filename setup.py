@@ -23,9 +23,9 @@ setuptools.setup(
     data_files=[("mypackage", ["tools/gen_addon_readme.template"])],
     install_requires=[
         "click==8.1.7",
-        "jinja2==3.1.3",
-        "docutils==0.20.1",
-        "Pygments==2.17.2",
+        "jinja2==3.1.4",
+        "docutils==0.21.2",
+        "Pygments==2.18.0",
     ],
     packages=setuptools.find_packages(),
     classifiers=[
