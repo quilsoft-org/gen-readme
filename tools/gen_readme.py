@@ -350,7 +350,9 @@ def gen_readme(files, addons):
         if module := is_module(addons, file):
             modules.append(module)
 
+    print('addons',         addons)
     print('modulos a testear ',modules)
+    print('answers ', answers)
     exit(1)
 
     for module in modules:
