@@ -7,13 +7,7 @@
 
         {
             "name": "Debug gen-readme proyect",
-            "args": [
-                "module_1","module_2",".copier_answers.yml",
-                "--addons-dir=/odoo/ar/odoo-16.0e/sources/utest",
-                "--org-name=quilsoft-org",
-                "--repo-name=utestguay",
-                "--branch=16.0",
-            ],
+            "args": ["module_1","module_2",".copier-answers.yml",],
             "type": "python",
             "python": "/usr/bin/python3",
             "request": "launch",

@@ -294,7 +294,6 @@ def gen_one_addon_readme(org_name, repo_name, branch, addon_name, addon_dir, man
         rf.write("\n")
     return readme_filename
 
-
 @click.command()
 @click.argument(
     "files",
@@ -324,15 +323,15 @@ def gen_one_addon_readme(org_name, repo_name, branch, addon_name, addon_dir, man
 #     help="Directory containing several addons, the README will be "
 #     "generated for all installable addons found there...",
 # )
-# def get_answers(answ):
-#     with open(answ) as file:
-#         answers = yaml.safe_load(file)
-
-#     print(answers)
 
 
 def gen_readme(files):
     """main function esta es la entrada"""
+
+    def get_answers(answ):
+        with open(answ) as file:
+            answers = yaml.safe_load(file)
+        print(answers)
 
 
     # pre-commit le pasa todos los files que hay en el repositorio como parametros
