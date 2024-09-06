@@ -7,7 +7,7 @@
 
         {
             "name": "Debug gen-readme proyect",
-            "args": ["module_1","module_2",".copier-answers.yml",],
+            "args": ["--addons","/home/jobiols/tmp/utest"],
             "type": "python",
             "python": "/usr/bin/python3",
             "request": "launch",

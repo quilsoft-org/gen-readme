@@ -17,6 +17,14 @@ def get_manifest_path(addon_dir):
             return manifest_path
 
 
+def is_module(addons_path, file):
+    manifest_path = f"{addons_path}/{file}/__manifest__.py"
+    init_path = f"{addons_path}/{file}/__init__.py"
+    if not (os.path.isfile(manifest_path) and os.path.isfile(init_path)):
+        return False
+    return f"{addons_path}/{file}"
+
+
 def parse_manifest(s):
     return ast.literal_eval(s)
 
