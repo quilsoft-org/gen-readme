@@ -82,7 +82,7 @@ PRE_COMMIT_BADGES = {
         "Pre-Commit",
     ),
 }
-
+errors = []
 
 # this comes from pypa/readme_renderer
 RST2HTML_SETTINGS = {
@@ -198,7 +198,6 @@ def generate_fragment(answers, file):
 
 def check_readme_fragments(addon_dir):
     """Verifica si el contenido del readme es válido"""
-    print("verificando readme")
     parts_to_check = [
         {
             "section": "CONTRIBUTORS.rst",
@@ -209,7 +208,7 @@ def check_readme_fragments(addon_dir):
             "msg": "The section %s/readme/%s has very little content.",
         },
     ]
-    errors = []
+
     module_name = os.path.basename(addon_dir)
 
     for item in parts_to_check:
@@ -268,13 +267,15 @@ def gen_one_addon_readme(answers, module):
 
     author = manifest.get("author")
     if not author or author != "Quilsoft":
-        print("The manifest does not have author, please add Quilsoft as the author.")
-        exit(1)
+        errors.append(
+            "The manifest of module {module} does not have author, please add Quilsoft as the author."
+        )
 
     name = manifest.get("name")
     if not name:
-        print("The manifest has no name, please add a proper name")
-        exit(1)
+        errors.append(
+            f"The manifest of module {module} has no name, please add a proper name"
+        )
 
     # generate
     template_filename = os.path.join(
@@ -323,8 +324,6 @@ def gen_one_addon_readme(answers, module):
 def gen_readme(files, addons):
     """main function esta es la entrada"""
 
-    print("Se arranca el gen-readme v1.3.40")
-
     def get_answers(answ):
         with open(answ) as file:
             return yaml.safe_load(file)
@@ -336,8 +335,6 @@ def gen_readme(files, addons):
         else:
             print("There are no parameters given")
             exit(1)
-
-    print("archivos a procesar =", files)
 
     modules = []
     # De esos archivos me quedo con los que son modulos
