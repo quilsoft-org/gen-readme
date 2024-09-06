@@ -323,7 +323,7 @@ def gen_one_addon_readme(answers, module):
 def gen_readme(files, addons):
     """main function esta es la entrada"""
 
-    print("Se arranca el gen-readme v1.3.34")
+    print("Se arranca el gen-readme v1.3.35")
 
     def get_answers(answ):
         with open(answ) as file:
