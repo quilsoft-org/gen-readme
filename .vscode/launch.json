@@ -7,7 +7,7 @@
 
         {
             "name": "Debug gen-readme proyect",
-            "args": ["--addons","/home/jobiols/tmp/utest"],
+
             "type": "python",
             "python": "/usr/bin/python3",
             "request": "launch",

@@ -19,7 +19,11 @@ def get_manifest_path(addon_dir):
 
 def is_module(addons_path, file):
     manifest_path = f"{addons_path}/{file}/__manifest__.py"
+    print("manifest", manifest_path)
+
     init_path = f"{addons_path}/{file}/__init__.py"
+    print("init", init_path)
+
     if not (os.path.isfile(manifest_path) and os.path.isfile(init_path)):
         return False
     return f"{addons_path}/{file}"
