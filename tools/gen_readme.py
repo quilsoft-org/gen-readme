@@ -1,3 +1,4 @@
+import sys
 import os
 import yaml
 import click
@@ -294,46 +295,45 @@ def gen_one_addon_readme(org_name, repo_name, branch, addon_name, addon_dir, man
     return readme_filename
 
 
-@click.command()
-@click.argument(
-    "files",
-    type=click.Path(exists=False),
-    nargs=-1,
-)
-# @click.option(
-#     "--version",
-#     is_flag=True,
-#     help="Show version and exit",
+# @click.command()
+# @click.argument(
+#     "files",
+#     type=click.Path(exists=False),
+#     nargs=-1,
 # )
-@click.option(
-    "--org-name",
-    help="Organization name",
-)
-@click.option(
-    "--repo-name",
-    help="Repository name, eg. server-tools.",
-)
-@click.option(
-    "--branch",
-    help="Odoo series. eg 11.0.",
-)
-@click.option(
-    "--addons-dir",
-    type=click.Path(dir_okay=True, file_okay=False, exists=False),
-    help="Directory containing several addons, the README will be "
-    "generated for all installable addons found there...",
-)
-def get_answers(answ):
-    with open(answ) as file:
-        answers = yaml.safe_load(file)
+# # @click.option(
+# #     "--version",
+# #     is_flag=True,
+# #     help="Show version and exit",
+# # )
+# @click.option(
+#     "--org-name",
+#     help="Organization name",
+# )
+# @click.option(
+#     "--repo-name",
+#     help="Repository name, eg. server-tools.",
+# )
+# @click.option(
+#     "--branch",
+#     help="Odoo series. eg 11.0.",
+# )
+# @click.option(
+#     "--addons-dir",
+#     type=click.Path(dir_okay=True, file_okay=False, exists=False),
+#     help="Directory containing several addons, the README will be "
+#     "generated for all installable addons found there...",
+# )
+# def get_answers(answ):
+#     with open(answ) as file:
+#         answers = yaml.safe_load(file)
 
-    print(answers)
+#     print(answers)
 
 
-def gen_readme(files, org_name, repo_name, branch, addons_dir):
+def gen_readme(files):
     """main function esta es la entrada"""
 
-    import sys
 
     # pre-commit le pasa todos los files que hay en el repositorio como parametros
     files = sys.argv[1:]
