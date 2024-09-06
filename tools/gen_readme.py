@@ -351,11 +351,6 @@ def gen_readme(files, addons):
         if module and module not in modules:
             modules.append(module)
 
-    print("addons", addons)
-    print("modulos a testear ", modules)
-    print("answers ", answers)
-    exit(1)
-
     for module in modules:
         # si no existe el readme (directorio) lo creamos
         if not os.path.exists(os.path.join(module, FRAGMENTS_DIR)):
