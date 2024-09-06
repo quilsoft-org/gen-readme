@@ -313,23 +313,6 @@ def gen_one_addon_readme(answers, module):
     type=click.Path(exists=False),
     nargs=-1,
 )
-# # @click.option(
-# #     "--version",
-# #     is_flag=True,
-# #     help="Show version and exit",
-# # )
-# @click.option(
-#     "--org-name",
-#     help="Organization name",
-# )
-# @click.option(
-#     "--repo-name",
-#     help="Repository name, eg. server-tools.",
-# )
-# @click.option(
-#     "--branch",
-#     help="Odoo series. eg 11.0.",
-# )
 @click.option(
     "--addons",
     type=click.Path(dir_okay=True, file_okay=False, exists=False),
@@ -340,11 +323,13 @@ def gen_one_addon_readme(answers, module):
 def gen_readme(files, addons):
     """main function esta es la entrada"""
 
+    print('Se arranca el gen-readme')
+
     def get_answers(answ):
         with open(answ) as file:
             return yaml.safe_load(file)
 
-    # pre-commit le pasa todos los files que hay en el repositorio como parametros
+    print('answers', get_answers())
 
     if not files:
         # Si no fue llamado por pre-commit tomamos los files del path que le paso
@@ -380,26 +365,3 @@ def gen_readme(files, addons):
 
         # Generamos el html
         gen_one_addon_index(readme_filename)
-
-    # addons = []
-    # if addons_dir:
-    #     # obtiene lista de diccionarios con los datos relevantes de cada modulo.
-    #     addons.extend(find_addons(addons_dir))
-
-    # for addon_name, addon_dir, manifest in addons:
-    #     # si no existe el readme (directorio) lo creamos
-    #     if not os.path.exists(os.path.join(addon_dir, FRAGMENTS_DIR)):
-    #         os.mkdir(os.path.join(addon_dir, FRAGMENTS_DIR))
-
-    #     # Generar fragmentos si no existen y README.rst
-    #     readme_filename = gen_one_addon_readme(
-    #         org_name, repo_name, branch, addon_name, addon_dir, manifest
-    #     )
-
-    #     # Verifica que en el readme haya datos validos
-    #     if not check_readme_fragments(addon_dir):
-    #         exit(1)
-
-    #     # if not manifest.get("preloadable", True):
-    #     #     continue
-    #     gen_one_addon_index(readme_filename)
