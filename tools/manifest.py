@@ -25,8 +25,12 @@ def is_module(addons_path, file):
 
     if "__init__.py" in file or "__manifest__.py" in file:
         module = "/".join(file.split("/"))[:-1]
+    else:
+        module = False
 
-    return f"{addons_path}/{module}"
+    if module:
+        return f"{addons_path}/{module}"
+    return False
 
 
 def parse_manifest(s):
