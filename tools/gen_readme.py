@@ -295,12 +295,12 @@ def gen_one_addon_readme(org_name, repo_name, branch, addon_name, addon_dir, man
     return readme_filename
 
 
-# @click.command()
-# @click.argument(
-#     "files",
-#     type=click.Path(exists=False),
-#     nargs=-1,
-# )
+@click.command()
+@click.argument(
+    "files",
+    type=click.Path(exists=False),
+    nargs=-1,
+)
 # # @click.option(
 # #     "--version",
 # #     is_flag=True,
