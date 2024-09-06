@@ -323,7 +323,7 @@ def gen_one_addon_readme(answers, module):
 def gen_readme(files, addons):
     """main function esta es la entrada"""
 
-    print('Se arranca el gen-readme v1.3.31' )
+    print('Se arranca el gen-readme v1.3.32' )
 
     def get_answers(answ):
         with open(answ) as file:
@@ -338,7 +338,6 @@ def gen_readme(files, addons):
             exit(1)
 
     print("archivos a procesar = ", files)
-    exit(1)
 
     modules = []
     # De esos archivos me quedo con los que son modulos
@@ -350,6 +349,9 @@ def gen_readme(files, addons):
         # Quedarse con los archivos que son modulos
         if module := is_module(addons, file):
             modules.append(module)
+
+    print('modulos a testear ',modules)
+    exit(1)
 
     for module in modules:
         # si no existe el readme (directorio) lo creamos
