@@ -24,13 +24,9 @@ def is_module(addons_path, file):
     Tener en cuenta que se pueden repetir."""
 
     if "__init__.py" in file or "__manifest__.py" in file:
-        module = "/".join(file.split("/"))[:-1]
+        return file.split("/")[0]
     else:
-        module = False
-
-    if module:
-        return f"{addons_path}/{module}"
-    return False
+        return False
 
 
 def parse_manifest(s):
