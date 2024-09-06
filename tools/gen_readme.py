@@ -1,14 +1,14 @@
 import os
-import yaml
-import click
-import os
 import re
-from .manifest import is_module, read_manifest
-from jinja2 import Template
-from docutils.core import publish_file
 import tempfile
 from urllib.parse import urljoin
 
+import click
+import yaml
+from docutils.core import publish_file
+from jinja2 import Template
+
+from .manifest import is_module, read_manifest
 
 FRAGMENTS_DIR = "readme"
 
@@ -261,14 +261,8 @@ def gen_one_addon_readme(answers, module):
     if development_status in DEVELOPMENT_STATUS_BADGES:
         badges.append(DEVELOPMENT_STATUS_BADGES[development_status])
 
-    license = manifest.get("license")
-    if not license:
-        print(
-            "The manifest does not have a defined license. Please add one of these "
-            "licenses. "
-            "AGPL-3,GPL-2,GPL-2 or any later version,GPL-3,GPL-3 or any later version,LGPL-3,OPL-1"
-        )
-        exit(1)
+    license = manifest.get("license", "AGPL-3")
+
     if license in LICENSE_BADGES:
         badges.append(LICENSE_BADGES[license])
 

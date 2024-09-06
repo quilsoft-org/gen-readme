@@ -1,10 +1,5 @@
 - id: gen-readme
-  name: Check readme contents
+  name: check readme contents
   entry: gen-readme
   language: python
   require_serial: true
-  # args:
-  #   - "--org-name"
-  #   - "--repo-name"
-  #   - "--branch"
-  #   - "--gen-html"

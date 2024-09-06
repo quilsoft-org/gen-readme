@@ -1,4 +1,5 @@
 import setuptools
+
 from tools.__init__ import __version__
 
 with open("README.md") as fh:
