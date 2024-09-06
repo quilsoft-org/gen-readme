@@ -329,8 +329,6 @@ def gen_readme(files, addons):
         with open(answ) as file:
             return yaml.safe_load(file)
 
-    print('answers', get_answers())
-
     if not files:
         # Si no fue llamado por pre-commit tomamos los files del path que le paso
         if addons:
