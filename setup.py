@@ -26,6 +26,7 @@ setuptools.setup(
         "jinja2==3.1.3",
         "docutils==0.20.1",
         "Pygments==2.17.2",
+        "PyYAML==6.0.2",
     ],
     packages=setuptools.find_packages(),
     classifiers=[
