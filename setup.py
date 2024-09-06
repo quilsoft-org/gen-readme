@@ -13,7 +13,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/jobiols/gen-readme",
     author_email="jorge.obiols@gmail.com",
-    python_requires="==3.8",
+    python_requires="==3.9",
     entry_points={
         "console_scripts": [
             "gen-readme=tools.gen_readme:gen_readme",
