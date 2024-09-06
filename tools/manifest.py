@@ -18,15 +18,15 @@ def get_manifest_path(addon_dir):
 
 
 def is_module(addons_path, file):
-    manifest_path = f"{addons_path}/{file}/__manifest__.py"
-    print("manifest", manifest_path)
+    """verifica si un archivo pertenece a un modulo, se le pasan todos los archivos
+    desde la raiz del repositorio, si el path al archivo es de la forma xxx/__init__.py
+    o yyy/__manifest__.py entonces xxx o yyy son modulos.
+    Tener en cuenta que se pueden repetir."""
 
-    init_path = f"{addons_path}/{file}/__init__.py"
-    print("init", init_path)
+    if "__init__.py" in file or "__manifest__.py" in file:
+        module = "/".join(file.split("/"))[:-1]
 
-    if not (os.path.isfile(manifest_path) and os.path.isfile(init_path)):
-        return False
-    return f"{addons_path}/{file}"
+    return f"{addons_path}/{module}"
 
 
 def parse_manifest(s):
