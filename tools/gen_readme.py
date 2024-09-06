@@ -338,6 +338,7 @@ def gen_readme(files, addons):
             exit(1)
 
     print("archivos a procesar = ", files)
+    exit(1)
 
     modules = []
     # De esos archivos me quedo con los que son modulos
