@@ -276,7 +276,7 @@ def gen_rst_readme(kwargs, module):
     if not author or author != "Quilsoft":
         errors.append(
             f"The manifest of module {module} does not have author, please add "
-            "{kwargs.get('author')} as the author."
+            f"{kwargs.get('author')} as the author."
         )
 
     name = manifest.get("name")
