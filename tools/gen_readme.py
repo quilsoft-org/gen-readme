@@ -237,6 +237,22 @@ def check_readme_fragments(kwargs, module):
             f"{kwargs.get('min_description_words')} words to be acceptable."
         )
 
+    # Chequear que el manifiesto tenga autor
+    manifest = read_manifest(addons, module)
+    author = manifest.get("author")
+    if not author or author != kwargs.get("author"):
+        errors.append(
+            f"The manifest of module {module} does not have author, please add "
+            f"{kwargs.get('author')} as the author."
+        )
+
+    # Chequear que el manifiesto tenga nombre
+    name = manifest.get("name")
+    if not name:
+        errors.append(
+            f"The manifest of module {module} has no name, please add a proper name."
+        )
+
 
 def gen_rst_readme(kwargs, module):
     """Genera el README.rst"""
@@ -272,19 +288,6 @@ def gen_rst_readme(kwargs, module):
     if license in LICENSE_BADGES:
         badges.append(LICENSE_BADGES[license])
 
-    author = manifest.get("author")
-    if not author or author != "Quilsoft":
-        errors.append(
-            f"The manifest of module {module} does not have author, please add "
-            f"{kwargs.get('author')} as the author."
-        )
-
-    name = manifest.get("name")
-    if not name:
-        errors.append(
-            f"The manifest of module {module} has no name, please add a proper name."
-        )
-
     # generate
     template_filename = f"{os.path.dirname(__file__)}/gen_addon_readme.template"
     readme_filename = f"{addons}/{module}/README.rst"
@@ -297,14 +300,14 @@ def gen_rst_readme(kwargs, module):
         rf.write(
             template.render(
                 {
-                    "addon_name": name,
-                    "author": author,
-                    "badges": badges,
-                    "fragments": fragments,
+                    "addon_name": manifest.get("name"),
+                    "author": manifest.get("author"),
                     "manifest": manifest,
                     "org_name": kwargs.get("org_name"),
-                    "development_status": development_status,
                     "web": kwargs.get("website"),
+                    "badges": badges,
+                    "fragments": fragments,
+                    "development_status": development_status,
                     "toc": readme_characters > 1000,
                 }
             )
