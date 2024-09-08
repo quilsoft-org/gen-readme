@@ -1,14 +1,15 @@
 
-README GENERATOR
-================
-This package is based on the oca-gen-addon-readme from the OCA/maintainer-tools.git repo
-wich is licensed AGPL-3
+README GENERATOR AND VALIDATOR FOR ODOO
+=======================================
 
-This is a small utility that generates high quality README for our odoo modules
-in an automated way.
+This plugin is based on oca-gen-addon-readme from the repository [OCA/maintainer-tools.git](https://github.com/OCA/maintainer-tools). The original version is licensed under AGPL-3.
 
-The sections of the final README are organized in fragments. They must be put inside a
-readme folder respecting this structure.
+You can find the terms of the license in the LICENSE file available in this repository.
+
+This small utility generates high-quality README.rst files along with a web page, which is displayed when reviewing the module's information. The webpage is located in the static/index.html directory.
+
+The README generation starts by creating a readme directory in the module, containing a number of .rst files called *Fractions* where the developer can describe the module's functionalities in detail.
+
 
     tony_stark_module
     ├── views
@@ -25,52 +26,14 @@ readme folder respecting this structure.
     ├── static
     └── views
 
-eg. To generate the final README for each module of the repository we can say (if we
-    are stand in the repository root)
+What gen_readme does:
+---------------------
 
-    gen-readme --repo-name=stark-enterprises --branch=16.0 --addon-dir="$PWD"
-
-The result is a fully pypi compilant README.rst in the root of each module of the repo
-
-
-Installation
-------------
-
-    sudo pipx install gen-odoo-readme
-
-see proyect in https://pypi.org/project/gen-odoo-readme/
-
-Use el comando gen-readme --help para obtener esta ayuda
-
-    Usage: gen-readme [OPTIONS]
-
-    Options:
-    --org-name TEXT             Organization name  [required]
-    --repo-name TEXT            Repository name, eg. server-tools.  [required]
-    --branch TEXT               Odoo series. eg 11.0.  [required]
-    --addons-dir DIRECTORY      Directory containing several addons, the README
-                                will be generated for all installable addons
-                                found there.  [required]
-    --gen-html / --no-gen-html  Generate index html file.
-    --help                      Show this message and exit.
-
-Recomendation
--------------
-
-We recommend to set a small make_readme.sh file in each repo as this
-
-    #!/usr/bin/env bash
-    #################################
-    # Generate the odoo README.rst documentacion for each module in
-    # the current repository.
-    # you must install this: pip install gen-odoo-readme
-
-    gen-readme \
-        --web https://quilsoft.com \
-        --org-name quilsoft-org \
-        --repo-name star_enterprises \
-        --branch 16.0 \
-        --addons-dir "$PWD"
+1. If the readme directory does not exist in the module, gen-readme will create the directory in situ, with all the fragments plus an empty README.
+1. Make sure that the CONTRIBUTORS.rst section includes the developer(s) who created or modified the module, as there may be multiple authors.
+1. Ensure that the word count in the DESCRIPTION section is at a reasonable level. This can be adjusted using a parameter.
+1. Check that the module's manifest contains the author key, which usually refers to the intellectual property owner, typically the partner.
+1. Additionally, at the request of Raiver Figueroa, ensure that the module has an icon.
 
 pre-commit hook
 ---------------
@@ -81,3 +44,38 @@ You can use this module as a pre-commit plugin this way
         rev: 1.3.45
         hooks:
         - id: gen-readme
+          args:
+            - --min-description-words 20
+            - --website https://quilsoft.com
+            - --org_name quilsoft-org
+            - --author Quilsoft
+
+Local Installation
+------------------
+
+You can install the plugin locally and run it against a set of modules. To do this, you need to install it with:
+
+    sudo pipx install gen-odoo-readme
+
+See proyect details in [pypi.org/gen-odoo/readme](https://pypi.org/project/gen-odoo-readme/)
+
+Use the gen-readme --help command for detailed usage instructions:
+
+    Usage: gen-readme [OPTIONS] [FILES]...
+
+    main function for gen_readme
+
+    Options:
+    --addons DIRECTORY              Directory containing several addons, the
+                                    README will be generated for all installable
+                                    addons found there...
+    --min-description-words INTEGER
+                                    Minimum number of words that the DESCRIPTION
+                                    section must contain./n Default 40
+    --website TEXT                  Partner website; the logo at the end of the
+                                    README is taken from this website
+    --org-name TEXT                 Github Organization from the
+                                    partner./nDefault quilsoft-org
+    --help                          Show this message and exit
+
+When working locally, you must provide the --addons-dir DIRECTORY option to make it work
