@@ -1,10 +1,10 @@
 import os
 import re
 import tempfile
+from pathlib import Path
 from urllib.parse import urljoin
 
 import click
-import yaml
 from docutils.core import publish_file
 from jinja2 import Template
 
@@ -158,7 +158,7 @@ def check_rst(readme_filename):
         )
 
 
-def generate_fragment(answers, file):
+def generate_fragment(kwargs, file, module):
     fragment_lines = file.readlines()
     if not fragment_lines:
         return False
@@ -167,10 +167,10 @@ def generate_fragment(answers, file):
     image_path_re = re.compile(r".*\s*\.\..* (figure|image)::\s+(?P<path>.*?)\s*$")
     module_url = (
         "https://raw.githubusercontent.com/"
-        f"{answers.get('org_name','quilsoft-org')}/"
-        f"{answers.get('repo_name','my-repo')}/"
-        f"{answers.get('branch','main')}/"
-        f"{answers.get('addon_name','addon')}/"
+        f"{kwargs.get('org_name','quilsoft-org')}/"
+        f"{kwargs.get('repo_name','my-repo')}/"
+        f"{kwargs.get('branch','main')}/"
+        f"{module}/"
     )
     for index, fragment_line in enumerate(fragment_lines):
         mo = image_path_re.match(fragment_line)
@@ -196,54 +196,60 @@ def generate_fragment(answers, file):
     return fragment
 
 
-def check_readme_fragments(addon_dir):
+def check_contributors(addons, module):
+    dir = f"{addons}/{module}/readme/CONTRIBUTORS.rst"
+    pattern = r"^\*\s+[a-zA-Z\s]+\s<[\w\.-]+@[\w\.-]+>$"
+    with open(dir, encoding="utf-8") as file:
+        content = file.readlines()
+
+        for line in content:
+            if re.match(pattern, line.strip()):
+                return True
+    return False
+
+
+def check_description(kwargs, module):
+    addons = kwargs.get("addons")
+    dir = f"{addons}/{module}/readme/DESCRIPTION.rst"
+    with open(dir, encoding="utf-8") as file:
+        content = file.read()
+    words = len(content.split())
+    return words >= kwargs.get("min_description_words")
+
+
+def check_readme_fragments(kwargs, module):
     """Verifica si el contenido del readme es válido"""
-    parts_to_check = [
-        {
-            "section": "CONTRIBUTORS.rst",
-            "msg": 'The section %s/readme/%s has no identification please add one i.e. "* Jorge Obiols <jorge.obiols@gmail.com>".',
-        },
-        {
-            "section": "DESCRIPTION.rst",
-            "msg": "The section %s/readme/%s has very little content.",
-        },
-    ]
+    addons = kwargs.get("addons")
+    # Chequear que tenga el contributores
+    if not check_contributors(addons, module):
+        errors.append(
+            "The section {module_name}/readme/CONTRIBUTORS.rst has no "
+            "identification please add one i.e. "
+            "'* Jorge Obiols <jorge.obiols@gmail.com>'."
+        )
 
-    module_name = os.path.basename(addon_dir)
-
-    for item in parts_to_check:
-        dir = os.path.join(addon_dir + "/readme", item.get("section"))
-
-        try:
-            with open(dir, encoding="utf-8") as file:
-                content = file.read().strip()
-                if len(content) <= 10:
-                    errors.append(item["msg"] % (module_name, item["section"]))
-
-        except FileNotFoundError:
-            errors.append(f"File {module_name}/readme/{item['section']} does not exist")
-        except Exception as e:
-            errors.append(
-                f"Unknown exception str({e}) reading {module_name}/readme/{item['section']}"
-            )
-
-    for error in errors:
-        print(error)
-
-    return True if not errors else False
+    # Chequear que haya una descripción razonable
+    if not check_description(kwargs, module):
+        errors.append(
+            f"Please write a good description for the {module} module in the "
+            f"section {module}/readme/DESCRIPTION.rst\n"
+            f"The description must have at least "
+            f"{kwargs.get('min_description_words')} words to be acceptable."
+        )
 
 
-def gen_one_addon_readme(answers, module):
-    """Genera el README.rst para el addon addon_name"""
+def gen_rst_readme(kwargs, module):
+    """Genera el README.rst"""
+    addons = kwargs.get("addons")
     fragments = {}
     readme_characters = 0
     for fragment_name in FRAGMENTS:
-        fragment_filename = os.path.join(module, FRAGMENTS_DIR, fragment_name + ".rst")
+        fragment_filename = f"{addons}/{module}/{FRAGMENTS_DIR}/{fragment_name}.rst"
 
         if os.path.exists(fragment_filename):
             # si el fragmento existe lo leemos
             with open(fragment_filename, encoding="utf8") as file:
-                fragment = generate_fragment(answers, file)
+                fragment = generate_fragment(kwargs, file, module)
                 # para medir que tan grande es el readme, y poner o no el TOC
                 readme_characters += 0 if not fragment else len(fragment)
                 if fragment:
@@ -252,7 +258,8 @@ def gen_one_addon_readme(answers, module):
             # si el fragmento no existe lo creamos vacio
             with open(fragment_filename, "a") as f:
                 pass
-    manifest = read_manifest(module)
+
+    manifest = read_manifest(addons, module)
     badges = []
     badges.append(PRE_COMMIT_BADGES["pre-commmit"])
 
@@ -268,21 +275,19 @@ def gen_one_addon_readme(answers, module):
     author = manifest.get("author")
     if not author or author != "Quilsoft":
         errors.append(
-            "The manifest of module {module} does not have author, please add Quilsoft as the author."
+            f"The manifest of module {module} does not have author, please add "
+            "Quilsoft as the author."
         )
 
     name = manifest.get("name")
     if not name:
         errors.append(
-            f"The manifest of module {module} has no name, please add a proper name"
+            f"The manifest of module {module} has no name, please add a proper name."
         )
 
     # generate
-    template_filename = os.path.join(
-        os.path.dirname(__file__), "gen_addon_readme.template"
-    )
-    readme_filename = os.path.join(module, "README.rst")
-    website = manifest.get("website")
+    template_filename = f"{os.path.dirname(__file__)}/gen_addon_readme.template"
+    readme_filename = f"{addons}/{module}/README.rst"
 
     with open(template_filename, encoding="utf8") as tf:
         template = Template(tf.read())
@@ -297,9 +302,9 @@ def gen_one_addon_readme(answers, module):
                     "badges": badges,
                     "fragments": fragments,
                     "manifest": manifest,
-                    "org_name": answers.get("org_name", "quilsoft-org"),
+                    "org_name": kwargs.get("org_name"),
                     "development_status": development_status,
-                    "web": website,
+                    "web": kwargs.get("website"),
                     "toc": readme_characters > 1000,
                 }
             )
@@ -321,43 +326,65 @@ def gen_one_addon_readme(answers, module):
     "generated for all installable addons found there...",
     default=".",
 )
-def gen_readme(files, addons):
-    """main function esta es la entrada"""
+@click.option(
+    "--min-description-words",
+    type=int,
+    help="Cantidad mínima de palabras que debe contener la sección DESCRIPTION.",
+    default="40",
+)
+@click.option(
+    "--website",
+    type=str,
+    help="website del partner, se obtendrá el logo de ahi",
+    default="https://quilsoft.com",
+)
+@click.option(
+    "--org-name",
+    type=str,
+    help="Organización del partner",
+    default="quilsoft-org",
+)
+def gen_readme(files, **kwargs):
+    """main function for gen_readme"""
 
-    def get_answers(answ):
-        with open(answ) as file:
-            return yaml.safe_load(file)
+    # def get_answers(answ):
+    #     with open(answ) as file:
+    #         return yaml.safe_load(file)
 
     if not files:
         # Si no fue llamado por pre-commit tomamos los files del path que le paso
-        if addons:
-            files = os.listdir(addons)
+        if addons := kwargs.get("addons"):
+            files = {
+                str(file.relative_to(Path(addons)))
+                for file in Path(addons).rglob("*")
+                if file.is_file()
+            }
         else:
             print("There are no parameters given")
             exit(1)
 
-    modules = []
+    modules = set()
     # De esos archivos me quedo con los que son modulos
     for file in files:
-        # Leer el archivo de respuetas
-        if file == ".copier-answers.yml":
-            answers = get_answers(f"{addons}/{file}")
+        # # Leer el archivo de respuetas
+        # if file == ".copier-answers.yml":
+        #     answers = get_answers(f"{addons}/{file}")
 
-        # Quedarse con los archivos que son modulos
+        # Filtrar los directorios que son modulos
         module = is_module(addons, file)
-        if module and module not in modules:
-            modules.append(module)
+        if module:
+            modules.add(module)
 
     for module in modules:
         # si no existe el readme (directorio) lo creamos
-        if not os.path.exists(os.path.join(module, FRAGMENTS_DIR)):
-            os.mkdir(os.path.join(module, FRAGMENTS_DIR))
-
-        # Generamos o Regenamos el readme
-        readme_filename = gen_one_addon_readme(answers, module)
+        if not os.path.exists(f"{addons}/{module}/{FRAGMENTS_DIR}"):
+            os.mkdir(f"{addons}/{module}/{FRAGMENTS_DIR}")
 
         # Verifica que en el readme haya datos validos
-        check_readme_fragments(module)
+        check_readme_fragments(kwargs, module)
+
+        # Generamos o Regenamos el README.rst
+        readme_filename = gen_rst_readme(kwargs, module)
 
         # Generamos el html
         gen_one_addon_index(readme_filename)

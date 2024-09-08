@@ -10,9 +10,9 @@ class NoManifestFound(Exception):
     pass
 
 
-def get_manifest_path(addon_dir):
+def get_manifest_path(addons, module):
     for manifest_name in MANIFEST_NAMES:
-        manifest_path = os.path.join(addon_dir, manifest_name)
+        manifest_path = f"{addons}/{module}/{manifest_name}"
         if os.path.isfile(manifest_path):
             return manifest_path
 
@@ -29,16 +29,13 @@ def is_module(addons_path, file):
         return False
 
 
-def parse_manifest(s):
-    return ast.literal_eval(s)
-
-
-def read_manifest(addon_dir):
-    manifest_path = get_manifest_path(addon_dir)
+def read_manifest(addons, module):
+    manifest_path = get_manifest_path(addons, module)
     if not manifest_path:
-        raise NoManifestFound("no Odoo manifest found in %s" % addon_dir)
+        raise NoManifestFound("no Odoo manifest found in {module}")
     with open(manifest_path) as mf:
-        return parse_manifest(mf.read())
+        manifest = mf.read()
+    return ast.literal_eval(manifest)
 
 
 def find_addons(addons_dir, installable_only=True, this_modules=False):
