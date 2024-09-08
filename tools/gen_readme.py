@@ -313,6 +313,16 @@ def gen_rst_readme(kwargs, module):
     return readme_filename
 
 
+def check_icon(kwargs, module):
+    addons = kwargs.get("addons")
+    if not os.path.exists(f"{addons}/{module}/static/description/icon.png"):
+        errors.append(
+            "The module {module} has no icon\n"
+            "Please provide an icon.png file in the "
+            "{module}/static/description/icon.png path"
+        )
+
+
 @click.command()
 @click.argument(
     "files",
@@ -385,6 +395,9 @@ def gen_readme(files, **kwargs):
 
         # Verifica que en el readme haya datos validos
         check_readme_fragments(kwargs, module)
+
+        # Verifica que tenga un icono
+        check_icon(kwargs, module)
 
         # Si tengo errores reporto y termino
         if errors:
