@@ -329,7 +329,7 @@ def gen_rst_readme(kwargs, module):
 @click.option(
     "--min-description-words",
     type=int,
-    help="Minimum number of words that the DESCRIPTION section must contain./n Default 40",
+    help="Minimum number of words that the DESCRIPTION section must contain. Default: 40",
     default="40",
 )
 @click.option(
@@ -341,7 +341,7 @@ def gen_rst_readme(kwargs, module):
 @click.option(
     "--org-name",
     type=str,
-    help="Github Organization from the partner./nDefault quilsoft-org",
+    help="Github Organization from the partner. Default: quilsoft-org",
     default="quilsoft-org",
 )
 def gen_readme(files, **kwargs):
