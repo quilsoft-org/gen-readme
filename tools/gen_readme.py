@@ -105,7 +105,7 @@ RST2HTML_SETTINGS = {
     # Use the short form of syntax highlighting so that the generated
     # Pygments CSS can be used to style the output.
     "syntax_highlight": "short",
-    "output_enconding": "utf-8",
+    "output_encoding": "utf-8",
     "xml_declaration": False,
 }
 
