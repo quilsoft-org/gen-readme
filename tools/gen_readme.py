@@ -346,10 +346,10 @@ def gen_rst_readme(kwargs, module):
 )
 def gen_readme(files, **kwargs):
     """main function for gen_readme"""
-
+    addons = kwargs.get("addons")
     if not files:
         # Si no fue llamado por pre-commit tomamos los files del path que le paso
-        if addons := kwargs.get("addons"):
+        if addons:
             files = {
                 str(file.relative_to(Path(addons)))
                 for file in Path(addons).rglob("*")
