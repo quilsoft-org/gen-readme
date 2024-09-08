@@ -17,7 +17,7 @@ def get_manifest_path(addons, module):
             return manifest_path
 
 
-def is_module(addons_path, file):
+def is_module(file):
     """verifica si un archivo pertenece a un modulo, se le pasan todos los archivos
     desde la raiz del repositorio, si el path al archivo es de la forma xxx/__init__.py
     o yyy/__manifest__.py entonces xxx o yyy son modulos.

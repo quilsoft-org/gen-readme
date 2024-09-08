@@ -364,7 +364,7 @@ def gen_readme(files, **kwargs):
     for file in files:
 
         # Filtrar los directorios que son modulos
-        module = is_module(addons, file)
+        module = is_module(file)
         if module:
             modules.add(module)
 
