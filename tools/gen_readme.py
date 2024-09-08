@@ -125,7 +125,7 @@ def gen_one_addon_index(readme_filename):
     publish_file(
         source_path=readme_filename,
         destination_path=index_filename,
-        writer_name="html4css1",
+        writer_name="html5",
         settings_overrides=RST2HTML_SETTINGS,
     )
     with open(index_filename, "rb") as f:
@@ -135,13 +135,13 @@ def gen_one_addon_index(readme_filename):
     index = re.sub(
         rb"(<meta.*generator.*Docutils)\s*[\d.]+", rb"\1", index, re.MULTILINE
     )
-    # remove the http-equiv line
-    index = re.sub(
-        rb'<meta\s+http-equiv="Content-Type"\s+content="text/html;\s*charset=utf-8"\s*/?>',
-        b"",
-        index,
-        flags=re.MULTILINE | re.IGNORECASE,
-    )
+    # # remove the http-equiv line
+    # index = re.sub(
+    #     rb'<meta\s+http-equiv="Content-Type"\s+content="text/html;\s*charset=utf-8"\s*/?>',
+    #     b"",
+    #     index,
+    #     flags=re.MULTILINE | re.IGNORECASE,
+    # )
 
     with open(index_filename, "wb") as f:
         f.write(index)
