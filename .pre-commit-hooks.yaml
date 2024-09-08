@@ -3,3 +3,8 @@
   entry: gen-readme
   language: python
   require_serial: true
+  args:
+    - "--min-description-words"
+    - "--website"
+    - "--org-name"
+    - "--author"
