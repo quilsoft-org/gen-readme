@@ -1,3 +1,3 @@
-__version__ = "v1.3.45"
+__version__ = "v1.3.46"
 
 from . import manifest
