@@ -377,7 +377,8 @@ def gen_readme(files, **kwargs):
         for fragment in FRAGMENTS:
             fragment_file = f"{addons}/{module}/{FRAGMENTS_DIR}/{fragment}.rst"
             if not os.path.exists(fragment_file):
-                os.mkdir(fragment_file)
+                with open(fragment_file, "a"):
+                    pass
 
         # Generamos o Regenamos el README.rst
         readme_filename = gen_rst_readme(kwargs, module)
