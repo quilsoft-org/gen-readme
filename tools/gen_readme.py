@@ -347,10 +347,6 @@ def gen_rst_readme(kwargs, module):
 def gen_readme(files, **kwargs):
     """main function for gen_readme"""
 
-    # def get_answers(answ):
-    #     with open(answ) as file:
-    #         return yaml.safe_load(file)
-
     if not files:
         # Si no fue llamado por pre-commit tomamos los files del path que le paso
         if addons := kwargs.get("addons"):
@@ -366,9 +362,6 @@ def gen_readme(files, **kwargs):
     modules = set()
     # De esos archivos me quedo con los que son modulos
     for file in files:
-        # # Leer el archivo de respuetas
-        # if file == ".copier-answers.yml":
-        #     answers = get_answers(f"{addons}/{file}")
 
         # Filtrar los directorios que son modulos
         module = is_module(addons, file)
