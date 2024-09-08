@@ -331,26 +331,30 @@ def check_icon(kwargs, module):
 )
 @click.option(
     "--addons",
-    type=click.Path(dir_okay=True, file_okay=False, exists=False),
+    type=click.Path(
+        dir_okay=True,
+        file_okay=False,
+        exists=False,
+    ),
     help="Directory containing several addons, the README will be "
     "generated for all installable addons found there...",
     default=".",
 )
 @click.option(
     "--min-description-words",
-    type=int,
+    type=click.INT,
     help="Minimum number of words that the DESCRIPTION section must contain. Default: 40",
-    default="40",
+    default=40,
 )
 @click.option(
     "--website",
-    type=str,
+    type=click.STRING,
     help="Partner website; the logo at the end of the README is taken from this website",
     default="https://quilsoft.com",
 )
 @click.option(
     "--org-name",
-    type=str,
+    type=click.STRING,
     help="Github Organization from the partner. Default: quilsoft-org",
     default="quilsoft-org",
 )
@@ -382,13 +386,6 @@ def gen_readme(files, **kwargs):
         # si no existe el readme (directorio) lo creamos
         if not os.path.exists(f"{addons}/{module}/{FRAGMENTS_DIR}"):
             os.mkdir(f"{addons}/{module}/{FRAGMENTS_DIR}")
-
-        # si no existen los fragmentos (directorio) lo creamos
-        # for fragment in FRAGMENTS:
-        #     fragment_file = f"{addons}/{module}/{FRAGMENTS_DIR}/{fragment}.rst"
-        #     if not os.path.exists(fragment_file):
-        #         with open(fragment_file, "a"):
-        #             pass
 
         # Generamos o Regenamos el README.rst
         readme_filename = gen_rst_readme(kwargs, module)
