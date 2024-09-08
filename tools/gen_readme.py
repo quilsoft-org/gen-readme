@@ -225,7 +225,7 @@ def check_readme_fragments(kwargs, module):
         errors.append(
             f"The section {module}/readme/CONTRIBUTORS.rst has no "
             "identification please add one: \ni.e. "
-            "'* Jorge Obiols <jorge.obiols@gmail.com>'."
+            "'* Your Name <your@email.com>'"
         )
 
     # Chequear que haya una descripción razonable
@@ -407,11 +407,11 @@ def gen_readme(files, **kwargs):
         # Verifica que tenga un icono
         check_icon(kwargs, module)
 
-        # Si tengo errores reporto y termino
-        if errors:
-            for error in errors:
-                print(error)
-            exit(1)
-
         # Generamos el html
         gen_one_addon_index(readme_filename)
+
+    # Si tengo errores reporto y termino con error
+    if errors:
+        for error in errors:
+            print(error)
+        exit(1)
