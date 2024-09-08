@@ -337,7 +337,9 @@ def check_icon(kwargs, module):
         exists=False,
     ),
     help="Directory containing several addons, the README will be "
-    "generated for all installable addons found there...",
+    "generated for all installable addons found there.\nWARNING: This option should not"
+    " be used when installing as a pre-commit plugin; in that case, the modules are "
+    "automatically passed to this plugin.",
     default=".",
 )
 @click.option(
@@ -357,6 +359,12 @@ def check_icon(kwargs, module):
     type=click.STRING,
     help="Github Organization from the partner. Default: quilsoft-org",
     default="quilsoft-org",
+)
+@click.option(
+    "--author",
+    type=click.STRING,
+    help="Tipically the intelectual author of the module Default: Quilsoft",
+    default="Quilsoft",
 )
 def gen_readme(files, **kwargs):
     """main function for gen_readme"""

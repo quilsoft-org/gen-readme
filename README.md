@@ -61,7 +61,7 @@ See proyect details in [pypi.org/gen-odoo/readme](https://pypi.org/project/gen-o
 
 Use the gen-readme --help command for detailed usage instructions:
 
-    Usage: gen-readme [OPTIONS] [FILES]...
+    Usage: gen_readme.py [OPTIONS] [FILES]...
 
     main function for gen_readme
 
@@ -71,11 +71,13 @@ Use the gen-readme --help command for detailed usage instructions:
                                     addons found there...
     --min-description-words INTEGER
                                     Minimum number of words that the DESCRIPTION
-                                    section must contain./n Default 40
+                                    section must contain. Default: 40
     --website TEXT                  Partner website; the logo at the end of the
                                     README is taken from this website
-    --org-name TEXT                 Github Organization from the
-                                    partner./nDefault quilsoft-org
-    --help                          Show this message and exit
+    --org-name TEXT                 Github Organization from the partner.
+                                    Default: quilsoft-org
+    --author TEXT                   Tipically the intelectual author of the
+                                    module Default: Quilsoft
+    --help                          Show this message and exit.
 
 When working locally, you must provide the --addons-dir DIRECTORY option to make it work
