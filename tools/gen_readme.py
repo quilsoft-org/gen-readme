@@ -223,8 +223,8 @@ def check_readme_fragments(kwargs, module):
     # Chequear que tenga el contributores
     if not check_contributors(addons, module):
         errors.append(
-            "The section {module_name}/readme/CONTRIBUTORS.rst has no "
-            "identification please add one i.e. "
+            f"The section {module}/readme/CONTRIBUTORS.rst has no "
+            "identification please add one: \ni.e. "
             "'* Jorge Obiols <jorge.obiols@gmail.com>'."
         )
 
@@ -233,7 +233,7 @@ def check_readme_fragments(kwargs, module):
         errors.append(
             f"Please write a good description for the {module} module in the "
             f"section {module}/readme/DESCRIPTION.rst\n"
-            f"The description must have at least "
+            "The description must have at least "
             f"{kwargs.get('min_description_words')} words to be acceptable."
         )
 

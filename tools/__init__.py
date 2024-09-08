@@ -1,3 +1,3 @@
-__version__ = "v1.3.54"
+__version__ = "module_name}/readme"
 
 from . import manifest
