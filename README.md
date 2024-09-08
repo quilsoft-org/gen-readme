@@ -45,10 +45,10 @@ You can use this module as a pre-commit plugin this way
         hooks:
         - id: gen-readme
           args:
-            - --min-description-words 20
-            - --website https://quilsoft.com
-            - --org-name quilsoft-org
-            - --author Quilsoft
+            - --min-description-words=20
+            - --website=https://quilsoft.com
+            - --org-name=quilsoft-org
+            - --author=Quilsoft
 
 Local Installation
 ------------------
