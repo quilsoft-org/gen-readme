@@ -36,7 +36,7 @@ The result is a fully pypi compilant README.rst in the root of each module of th
 Installation
 ------------
 
-    sudo pip install gen-odoo-readme
+    sudo pipx install gen-odoo-readme
 
 see proyect in https://pypi.org/project/gen-odoo-readme/
 
@@ -77,8 +77,7 @@ pre-commit hook
 
 You can use this module as a pre-commit plugin this way
 
-
-    - repo: https://github.com/jobiols/gen-readme.git
-        rev: 1.2.2
+    - repo: https://github.com/quilsoft-org/gen-readme.git
+        rev: 1.3.45
         hooks:
         - id: gen-readme

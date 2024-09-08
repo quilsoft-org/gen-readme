@@ -329,19 +329,19 @@ def gen_rst_readme(kwargs, module):
 @click.option(
     "--min-description-words",
     type=int,
-    help="Cantidad mínima de palabras que debe contener la sección DESCRIPTION.",
+    help="Minimum number of words that the DESCRIPTION section must contain./n Default 40",
     default="40",
 )
 @click.option(
     "--website",
     type=str,
-    help="website del partner, se obtendrá el logo de ahi",
+    help="Partner website; the logo at the end of the README is taken from this website",
     default="https://quilsoft.com",
 )
 @click.option(
     "--org-name",
     type=str,
-    help="Organización del partner",
+    help="Github Organization from the partner./nDefault quilsoft-org",
     default="quilsoft-org",
 )
 def gen_readme(files, **kwargs):
@@ -373,11 +373,11 @@ def gen_readme(files, **kwargs):
         if not os.path.exists(f"{addons}/{module}/{FRAGMENTS_DIR}"):
             os.mkdir(f"{addons}/{module}/{FRAGMENTS_DIR}")
 
-        # Verifica que en el readme haya datos validos
-        check_readme_fragments(kwargs, module)
-
         # Generamos o Regenamos el README.rst
         readme_filename = gen_rst_readme(kwargs, module)
+
+        # Verifica que en el readme haya datos validos
+        check_readme_fragments(kwargs, module)
 
         # Generamos el html
         gen_one_addon_index(readme_filename)

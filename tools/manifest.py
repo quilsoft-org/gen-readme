@@ -18,15 +18,15 @@ def get_manifest_path(addons, module):
 
 
 def is_module(file):
-    """verifica si un archivo pertenece a un modulo, se le pasan todos los archivos
-    desde la raiz del repositorio, si el path al archivo es de la forma xxx/__init__.py
-    o yyy/__manifest__.py entonces xxx o yyy son modulos.
-    Tener en cuenta que se pueden repetir."""
+    """Verifica el directorio que se le pasa como parámetro es un modulo odoo"""
 
-    if "__init__.py" in file or "__manifest__.py" in file:
-        return file.split("/")[0]
-    else:
-        return False
+    # Divide el string por el separador '/'
+    parts = file.split("/")
+
+    # Verifica que la última parte es __init__.py o __manifest__.py
+    if len(parts) > 1 and parts[1] in ["__init__.py", "__manifest__.py"]:
+        return parts[0]
+    return False
 
 
 def read_manifest(addons, module):
