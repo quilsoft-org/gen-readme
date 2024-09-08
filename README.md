@@ -47,7 +47,7 @@ You can use this module as a pre-commit plugin this way
           args:
             - --min-description-words 20
             - --website https://quilsoft.com
-            - --org_name quilsoft-org
+            - --org-name quilsoft-org
             - --author Quilsoft
 
 Local Installation
