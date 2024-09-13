@@ -320,9 +320,9 @@ def check_icon(kwargs, module):
     addons = kwargs.get("addons")
     if not os.path.exists(f"{addons}/{module}/static/description/icon.png"):
         errors.append(
-            "The module {module} has no icon\n"
+            f"The module {module} has no icon\n"
             "Please provide an icon.png file in the "
-            "{module}/static/description/icon.png path"
+            f"{module}/static/description/icon.png path"
         )
 
 

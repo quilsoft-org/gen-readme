@@ -14,7 +14,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/jobiols/gen-readme",
     author_email="jorge.obiols@gmail.com",
-    python_requires=">=3.8,<3.9",
+    python_requires=">=3.8",
     entry_points={
         "console_scripts": [
             "gen-readme=tools.gen_readme:gen_readme",
@@ -24,9 +24,9 @@ setuptools.setup(
     data_files=[("mypackage", ["tools/gen_addon_readme.template"])],
     install_requires=[
         "click==8.1.7",
-        "jinja2==3.1.3",
-        "docutils==0.20.1",
-        "Pygments==2.17.2",
+        "jinja2==3.1.4",
+        "docutils==0.21.2",
+        "Pygments==2.18.0",
         "PyYAML==6.0.2",
     ],
     packages=setuptools.find_packages(),
