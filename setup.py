@@ -25,7 +25,7 @@ setuptools.setup(
     install_requires=[
         "click==8.1.7",
         "jinja2==3.1.4",
-        "docutils=>0.21.0",
+        "docutils>=0.21.0",
         "Pygments==2.18.0",
         "PyYAML==6.0.2",
     ],
