@@ -14,7 +14,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/jobiols/gen-readme",
     author_email="jorge.obiols@gmail.com",
-    python_requires=">=3.8",
+    python_requires=">=3.9",
     entry_points={
         "console_scripts": [
             "gen-readme=tools.gen_readme:gen_readme",
@@ -23,10 +23,10 @@ setuptools.setup(
     include_package_data=True,
     data_files=[("mypackage", ["tools/gen_addon_readme.template"])],
     install_requires=[
-        "click==8.1.7",
-        "jinja2==3.1.4",
+        "click==8.2.1",
+        "jinja2>=3.1.6",
         "docutils==0.21.2",
-        "Pygments==2.18.0",
+        "Pygments==2.19.2",
         "PyYAML==6.0.2",
     ],
     packages=setuptools.find_packages(),
@@ -34,7 +34,7 @@ setuptools.setup(
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
-        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
         "Operating System :: OS Independent",
         "Topic :: Software Development :: Documentation",
     ],
