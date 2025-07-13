@@ -7,9 +7,9 @@
 
         {
             "name": "Debug gen-readme proyect",
-            "args": ["--addons","/home/jobiols/tmp/utest","--author","Tecnopro","--min-description-words","20","--help"],
+            "args": ["--addons","/home/jobiols/tmp/gen-readme/test_dir","--author","Quilsoft","--min-description-words","20"],
             "type": "python",
-            "python": "/usr/bin/python3",
+            "python": "${workspaceFolder}/.venv/bin/python",
             "request": "launch",
             "module": "gen_readme",
             "justMyCode": true

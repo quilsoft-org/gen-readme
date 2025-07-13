@@ -1,3 +1,3 @@
 #!/bin/bash
-# instalador de gen_readme
-python3 -m pip install --user -e .
+# esto instala gen-readme localmente con -e para que se pueda modificar el codigo
+python3 -m pip install -e .

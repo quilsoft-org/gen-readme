@@ -288,7 +288,7 @@ def gen_rst_readme(kwargs, module):
     if license in LICENSE_BADGES:
         badges.append(LICENSE_BADGES[license])
 
-    # generate
+    # filenames to template and readme files.
     template_filename = f"{os.path.dirname(__file__)}/gen_addon_readme.template"
     readme_filename = f"{addons}/{module}/README.rst"
 
@@ -398,7 +398,7 @@ def gen_readme(files, **kwargs):
         if not os.path.exists(f"{addons}/{module}/{FRAGMENTS_DIR}"):
             os.mkdir(f"{addons}/{module}/{FRAGMENTS_DIR}")
 
-        # Generamos o Regenamos el README.rst
+        # Generamos o Regeneramos el README.rst
         readme_filename = gen_rst_readme(kwargs, module)
 
         # Verifica que en el readme haya datos validos

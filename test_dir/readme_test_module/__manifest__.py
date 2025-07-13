@@ -1,0 +1,27 @@
+{
+    "name": "Custom Reports",
+    "version": "16.0.2.1.0",
+    "summary": """ Custom Reports """,
+    "author": "Quilsoft",
+    "website": "www.quilsoft.com",
+    "category": "Testing",
+    "development_status": "production/stable",
+    "depends": [
+        "account",
+        "analytic",
+        "l10n_ar_ux",
+        "sale",
+        "stock",
+    ],
+    "data": [
+        "views/product_views.xml",
+        "views/account_move_line_views.xml",
+        "views/account_analytic_line_views.xml",
+        "report/account_invoice_report.xml",
+        "report/sale_report.xml",
+    ],
+    "application": True,
+    "installable": True,
+    "auto_install": False,
+    "license": "LGPL-3",
+}
