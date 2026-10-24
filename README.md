@@ -42,7 +42,7 @@ pre-commit hook
 You can use this module as a pre-commit plugin this way
 
     - repo: https://github.com/quilsoft-org/gen-readme.git
-        rev: 1.4.1
+        rev: 1.4.2
         hooks:
         - id: gen-readme
           args:
