@@ -1,11 +1,11 @@
 import os
 import re
-import tempfile
 from pathlib import Path
 from urllib.parse import urljoin
 
 import click
 from docutils.core import publish_file
+from docutils.utils import SystemMessage
 from jinja2 import Template
 
 from .manifest import is_module, read_manifest
@@ -82,7 +82,6 @@ PRE_COMMIT_BADGES = {
         "Pre-Commit",
     ),
 }
-errors = []
 
 # this comes from pypa/readme_renderer
 RST2HTML_SETTINGS = {
@@ -90,9 +89,9 @@ RST2HTML_SETTINGS = {
     # This is a security concern because people can insert files
     # that are part of the system, such as /etc/passwd.
     "file_insertion_enabled": False,
-    # Halt rendering and throw an exception if there was any errors or
-    # warnings from docutils.
-    "halt_level": 2,
+    # Halt rendering and throw an exception only on docutils errors; minor
+    # RST warnings in a fragment must not break the hook.
+    "halt_level": 3,
     # Output math blocks as LaTeX that can be interpreted by MathJax for
     # a prettier display of Math formulas.
     "math_output": "MathJax",
@@ -111,7 +110,8 @@ RST2HTML_SETTINGS = {
 
 
 def gen_one_addon_index(readme_filename):
-    """Genera el readme en html"""
+    """Genera el readme en html; retorna lista de errores (vacía si OK)."""
+    errors = []
     addon_dir = os.path.dirname(readme_filename)
     index_dir = os.path.join(addon_dir, "static", "description")
     index_filename = os.path.join(index_dir, "index.html")
@@ -119,15 +119,22 @@ def gen_one_addon_index(readme_filename):
         with open(index_filename) as f:
             if "gen-readme" not in f.read():
                 # index was created manually
-                return
-    if not os.path.isdir(index_dir):
-        os.makedirs(index_dir)
-    publish_file(
-        source_path=readme_filename,
-        destination_path=index_filename,
-        writer_name="html5",
-        settings_overrides=RST2HTML_SETTINGS,
-    )
+                return errors
+    try:
+        os.makedirs(index_dir, exist_ok=True)
+    except OSError as e:
+        errors.append(f"Error creating directory {index_dir}: {e}")
+        return errors
+    try:
+        publish_file(
+            source_path=readme_filename,
+            destination_path=index_filename,
+            writer_name="html5",
+            settings_overrides=RST2HTML_SETTINGS,
+        )
+    except SystemMessage as e:
+        errors.append(f"Error rendering {readme_filename} to HTML: {e}")
+        return errors
     with open(index_filename, "rb") as f:
         index = f.read()
     # remove the docutils version from generated html, to avoid
@@ -145,17 +152,7 @@ def gen_one_addon_index(readme_filename):
 
     with open(index_filename, "wb") as f:
         f.write(index)
-    return index_filename
-
-
-def check_rst(readme_filename):
-    with tempfile.NamedTemporaryFile() as f:
-        publish_file(
-            source_path=readme_filename,
-            destination=f,
-            writer_name="html4css1",
-            settings_overrides=RST2HTML_SETTINGS,
-        )
+    return errors
 
 
 def generate_fragment(kwargs, file, module):
@@ -198,7 +195,7 @@ def generate_fragment(kwargs, file, module):
 
 def check_contributors(addons, module):
     dir = f"{addons}/{module}/readme/CONTRIBUTORS.rst"
-    pattern = r"^\*\s+[a-zA-Z\s]+\s<[\w\.-]+@[\w\.-]+>$"
+    pattern = r"^\*\s+[\w\s'.-]+\s<[\w.+-]+@[\w.-]+>$"
     with open(dir, encoding="utf-8") as file:
         content = file.readlines()
 
@@ -218,7 +215,8 @@ def check_description(kwargs, module):
 
 
 def check_readme_fragments(kwargs, module):
-    """Verifica si el contenido del readme es válido"""
+    """Verifica si el contenido del readme es válido; retorna lista de errores."""
+    errors = []
     addons = kwargs.get("addons")
     # Chequear que tenga el contributores
     if not check_contributors(addons, module):
@@ -252,6 +250,7 @@ def check_readme_fragments(kwargs, module):
         errors.append(
             f"The manifest of module {module} has no name, please add a proper name."
         )
+    return errors
 
 
 def gen_rst_readme(kwargs, module):
@@ -272,8 +271,7 @@ def gen_rst_readme(kwargs, module):
                     fragments[fragment_name] = fragment
         else:
             # si el fragmento no existe lo creamos vacio
-            with open(fragment_filename, "a") as f:
-                pass
+            Path(fragment_filename).touch()
 
     manifest = read_manifest(addons, module)
     badges = []
@@ -317,6 +315,7 @@ def gen_rst_readme(kwargs, module):
 
 
 def check_icon(kwargs, module):
+    errors = []
     addons = kwargs.get("addons")
     if not os.path.exists(f"{addons}/{module}/static/description/icon.png"):
         errors.append(
@@ -324,6 +323,7 @@ def check_icon(kwargs, module):
             "Please provide an icon.png file in the "
             f"{module}/static/description/icon.png path"
         )
+    return errors
 
 
 @click.command()
@@ -381,7 +381,7 @@ def gen_readme(files, **kwargs):
                 if file.is_file()
             }
         else:
-            print("There are no parameters given")
+            click.echo("There are no parameters given")
             exit(1)
 
     modules = set()
@@ -389,10 +389,11 @@ def gen_readme(files, **kwargs):
     for file in files:
 
         # Filtrar los directorios que son modulos
-        module = is_module(file)
+        module = is_module(file, addons or ".")
         if module:
             modules.add(module)
 
+    errors = []
     for module in modules:
         # si no existe el readme (directorio) lo creamos
         if not os.path.exists(f"{addons}/{module}/{FRAGMENTS_DIR}"):
@@ -402,16 +403,16 @@ def gen_readme(files, **kwargs):
         readme_filename = gen_rst_readme(kwargs, module)
 
         # Verifica que en el readme haya datos validos
-        check_readme_fragments(kwargs, module)
+        errors.extend(check_readme_fragments(kwargs, module))
 
         # Verifica que tenga un icono
-        check_icon(kwargs, module)
+        errors.extend(check_icon(kwargs, module))
 
         # Generamos el html
-        gen_one_addon_index(readme_filename)
+        errors.extend(gen_one_addon_index(readme_filename))
 
     # Si tengo errores reporto y termino con error
     if errors:
         for error in errors:
-            print(error)
+            click.echo(error)
         exit(1)

@@ -2,6 +2,7 @@
 
 import ast
 import os
+from pathlib import Path
 
 MANIFEST_NAMES = ("__manifest__.py", "__openerp__.py", "__terp__.py")
 
@@ -17,15 +18,31 @@ def get_manifest_path(addons, module):
             return manifest_path
 
 
-def is_module(file):
-    """Verifica el directorio que se le pasa como parámetro es un modulo odoo"""
+def is_module(file, addons="."):
+    """Return the Odoo module that owns ``file``, relative to ``addons``.
 
-    # Divide el string por el separador '/'
-    parts = file.split("/")
+    A module is a directory that directly contains an Odoo manifest. Walk up
+    the file's parents until one with a manifest is found, so files at any
+    depth (views, readme fragments, data...) map to their module, plain
+    Python packages without a manifest are ignored, and nested addon
+    directories resolve correctly. Returns ``False`` when the file does not
+    belong to any module.
+    """
+    addons_root = Path(addons).resolve()
+    path = Path(file)
+    if not path.is_absolute():
+        path = addons_root / path
+    try:
+        rel = path.resolve().relative_to(addons_root)
+    except ValueError:
+        # file is outside the addons directory: not a module of this tree
+        return False
 
-    # Verifica que la última parte es __init__.py o __manifest__.py
-    if len(parts) > 1 and parts[1] in ["__init__.py", "__manifest__.py"]:
-        return parts[0]
+    for parent in rel.parents:
+        if parent == Path("."):
+            break
+        if get_manifest_path(str(addons_root), str(parent)):
+            return str(parent)
     return False
 
 
@@ -43,7 +60,7 @@ def find_addons(addons_dir, installable_only=True, this_modules=False):
     for addon_name in os.listdir(addons_dir):
         addon_dir = os.path.join(addons_dir, addon_name)
         try:
-            manifest = read_manifest(addon_dir)
+            manifest = read_manifest(addons_dir, addon_name)
         except NoManifestFound:
             continue
         if installable_only and not manifest.get("installable", True):
