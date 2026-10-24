@@ -18,8 +18,8 @@ def get_manifest_path(addons, module):
             return manifest_path
 
 
-def is_module(file, addons="."):
-    """Return the Odoo module that owns ``file``, relative to ``addons``.
+def is_module(filepath, addons="."):
+    """Return the Odoo module that owns ``filepath``, relative to ``addons``.
 
     A module is a directory that directly contains an Odoo manifest. Walk up
     the file's parents until one with a manifest is found, so files at any
@@ -27,13 +27,16 @@ def is_module(file, addons="."):
     Python packages without a manifest are ignored, and nested addon
     directories resolve correctly. Returns ``False`` when the file does not
     belong to any module.
+
+    Paths are normalized with ``os.path.abspath`` instead of ``Path.resolve``
+    so that symlinked modules are not skipped.
     """
-    addons_root = Path(addons).resolve()
-    path = Path(file)
+    addons_root = Path(os.path.abspath(addons))
+    path = Path(filepath)
     if not path.is_absolute():
         path = addons_root / path
     try:
-        rel = path.resolve().relative_to(addons_root)
+        rel = Path(os.path.abspath(path)).relative_to(addons_root)
     except ValueError:
         # file is outside the addons directory: not a module of this tree
         return False

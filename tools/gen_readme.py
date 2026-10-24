@@ -194,22 +194,25 @@ def generate_fragment(kwargs, file, module):
 
 
 def check_contributors(addons, module):
-    dir = f"{addons}/{module}/readme/CONTRIBUTORS.rst"
+    contributors_path = f"{addons}/{module}/readme/CONTRIBUTORS.rst"
     pattern = r"^\*\s+[\w\s'.-]+\s<[\w.+-]+@[\w.-]+>$"
-    with open(dir, encoding="utf-8") as file:
-        content = file.readlines()
+    try:
+        with open(contributors_path, encoding="utf-8") as file:
+            content = file.readlines()
+    except OSError:
+        return False
 
-        for line in content:
-            if re.match(pattern, line.strip()):
-                return True
-    return False
+    return any(re.match(pattern, line.strip()) for line in content)
 
 
 def check_description(kwargs, module):
     addons = kwargs.get("addons")
-    dir = f"{addons}/{module}/readme/DESCRIPTION.rst"
-    with open(dir, encoding="utf-8") as file:
-        content = file.read()
+    description_path = f"{addons}/{module}/readme/DESCRIPTION.rst"
+    try:
+        with open(description_path, encoding="utf-8") as file:
+            content = file.read()
+    except OSError:
+        return False
     words = len(content.split())
     return words >= kwargs.get("min_description_words")
 
@@ -360,13 +363,13 @@ def check_icon(kwargs, module):
 @click.option(
     "--org-name",
     type=click.STRING,
-    help="Github Organization from the partner. Default: quilsoft-org",
+    help="GitHub Organization from the partner. Default: quilsoft-org",
     default="quilsoft-org",
 )
 @click.option(
     "--author",
     type=click.STRING,
-    help="Tipically the intelectual author of the module Default: Quilsoft",
+    help="Typically the intellectual author of the module. Default: Quilsoft",
     default="Quilsoft",
 )
 def gen_readme(files, **kwargs):
