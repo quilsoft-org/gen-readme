@@ -80,4 +80,4 @@ Use the gen-readme --help command for detailed usage instructions:
                                     module Default: Quilsoft
     --help                          Show this message and exit.
 
-When working locally, you must provide the --addons-dir DIRECTORY option to make it work
+When working locally, you must provide the --addons DIRECTORY option to make it work
