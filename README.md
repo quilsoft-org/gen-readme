@@ -6,7 +6,7 @@ This plugin is based on oca-gen-addon-readme from the repository [OCA/maintainer
 
 You can find the terms of the license in the LICENSE file available in this repository.
 
-This small utility generates high-quality README.rst files along with a web page, which is displayed when reviewing the module's information. The webpage is located in the static/index.html directory.
+This small utility generates high-quality README.rst files along with a web page, which is displayed when reviewing the module's information. The webpage is generated at static/description/index.html.
 
 The README generation starts by creating a readme directory in the module, containing a number of .rst files called *Fractions* where the developer can describe the module's functionalities in detail.
 
@@ -18,9 +18,10 @@ The README generation starts by creating a readme directory in the module, conta
     |   ├── CONTRIBUTORS.rst
     |   ├── CREDITS.rst
     |   ├── DESCRIPTION.rst
+    |   ├── DEVELOP.rst
     |   ├── HISTORY.rst
     |   ├── INSTALL.rst
-    |   ├── READMAP.rst
+    |   ├── ROADMAP.rst
     |   └── USAGE.rst
     ├── reports
     ├── static
@@ -41,7 +42,7 @@ pre-commit hook
 You can use this module as a pre-commit plugin this way
 
     - repo: https://github.com/quilsoft-org/gen-readme.git
-        rev: 1.4.0
+        rev: 1.4.1
         hooks:
         - id: gen-readme
           args:
@@ -57,7 +58,7 @@ You can install the plugin locally and run it against a set of modules. To do th
 
     sudo pipx install gen-odoo-readme
 
-See proyect details in [pypi.org/gen-odoo/readme](https://pypi.org/project/gen-odoo-readme/)
+See project details in [pypi.org/project/gen-odoo-readme](https://pypi.org/project/gen-odoo-readme/)
 
 Use the gen-readme --help command for detailed usage instructions:
 
@@ -74,10 +75,10 @@ Use the gen-readme --help command for detailed usage instructions:
                                     section must contain. Default: 40
     --website TEXT                  Partner website; the logo at the end of the
                                     README is taken from this website
-    --org-name TEXT                 Github Organization from the partner.
+    --org-name TEXT                 GitHub Organization from the partner.
                                     Default: quilsoft-org
-    --author TEXT                   Tipically the intelectual author of the
-                                    module Default: Quilsoft
+    --author TEXT                   Typically the intellectual author of the
+                                    module. Default: Quilsoft
     --help                          Show this message and exit.
 
 When working locally, you must provide the --addons DIRECTORY option to make it work
